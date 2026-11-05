@@ -1,0 +1,565 @@
+[
+  {
+    "scenario": "User cannot delete an Azure Service Bus queue or topic from CPP",
+    "user_queries": [
+      "Why is the Delete button disabled when I try to delete an Azure Service Bus queue from CPP?",
+      "Why can't I delete an Azure Service Bus topic from CPP?"
+    ],
+    "solution": "For an Azure Service Bus topic, first check whether any Azure Service Bus topic subscriptions exist as child service capabilities. If they do, delete those reference services first. After they are successfully deleted, delete the topic. The Delete button can also be disabled when RBAC roles are assigned to the queue or topic from other services, such as Azure Web Apps or Azure Function Apps. Remove those RBAC references/roles first through CPP, then delete the queue or topic. In the documented example, RBAC associations with Function Apps were removed and the Delete button became available.",
+    "tags": [
+      "CPP",
+      "Azure",
+      "Service Bus",
+      "Queue",
+      "Topic",
+      "Delete",
+      "RBAC",
+      "Function App",
+      "Web App"
+    ]
+  },
+  {
+    "scenario": "User can view an Azure Function App but cannot edit it",
+    "user_queries": [
+      "I can view an Azure Function App, but I cannot edit it. Why do I get the error 'This feature requires write permission to your app'?",
+      "Why can I access some non-production Function Apps but cannot explore the functions deployed in them?"
+    ],
+    "solution": "CPP associates two AD security groups with capabilities: an application-contributor group and an application-viewer group. The contributor group provides edit/write permissions, while the viewer group provides read-only access, such as viewing logs. To edit or explore functions where write permission is required, the user must be added to the appropriate application-contributor role/group for the relevant environment. Check the resource in Azure under Access control (IAM) > View my access. If the contributor group is missing, ask the Application Owner to add you through CPP. In the documented example, the user was in the application-viewer-npd group but not the application-contributor-npd group.",
+    "tags": [
+      "CPP",
+      "Azure",
+      "Function App",
+      "AD Group",
+      "RBAC",
+      "IAM",
+      "Contributor",
+      "Viewer",
+      "Permissions"
+    ]
+  },
+  {
+    "scenario": "User requests access to an OpenShift namespace via CPP",
+    "user_queries": [
+      "I need access to a specific OpenShift namespace in the PPD environment. How do I get it?"
+    ],
+    "solution": "Only the subscription owner of the application can add users. Contact the subscription owner and ask them to assign either the application-contributor-npd role for contributor access or the application-viewer-npd role for viewer access, using the role appropriate to the required environment. Once assigned through CPP, the user is added to the corresponding OpenPass group, which grants access to the OpenShift namespace. A Service Request is generated and must be completed before access is granted.",
+    "tags": [
+      "CPP",
+      "OpenShift",
+      "Namespace",
+      "Access Request",
+      "Subscription Owner",
+      "Contributor",
+      "Viewer",
+      "OpenPass",
+      "Service Request"
+    ]
+  },
+  {
+    "scenario": "Subscription owner needs to add a user to an OpenShift namespace",
+    "user_queries": [
+      "I'm the subscription owner. How do I add a user to access the OpenShift namespace?"
+    ],
+    "solution": "In the CPP Portal, navigate to the Roles tab for the Cloud Platform Portal application and select Edit Users. Add the user to application-contributor-npd for contributor access or application-viewer-npd for viewer access, using the role for the required environment. This automatically adds the user to the respective OpenPass group and grants access to the namespace under the selected environment (for example, PPD, P1, or Prod). A user Service Request is created and must be completed before access is granted.",
+    "tags": [
+      "CPP",
+      "OpenShift",
+      "Namespace",
+      "Subscription Owner",
+      "Roles",
+      "Edit Users",
+      "Contributor",
+      "Viewer",
+      "Service Request"
+    ]
+  },
+  {
+    "scenario": "User is added to an OpenShift role but still cannot access the namespace",
+    "user_queries": [
+      "I was added to the role in CPP, but I still can't access the namespace."
+    ],
+    "solution": "After the role is assigned, a Service Request is generated automatically. Wait for the request to be processed and completed. Access becomes active after completion. If access still does not work after some time, contact the subscription owner or support team to confirm the request status.",
+    "tags": [
+      "CPP",
+      "OpenShift",
+      "Namespace",
+      "Access Issue",
+      "Service Request",
+      "Role Assignment"
+    ]
+  },
+  {
+    "scenario": "User requests access to the PPD environment",
+    "user_queries": [
+      "I need access to the PPD environment's OpenShift namespace. Who do I contact?"
+    ],
+    "solution": "Ask the subscription owner of the Cloud Platform Portal application to add you to the application-contributor-npd or application-viewer-npd role, depending on whether you need contributor or viewer access. The owner performs the assignment through CPP, which triggers the process to grant access to the PPD namespace in OpenShift.",
+    "tags": [
+      "CPP",
+      "PPD",
+      "OpenShift",
+      "Namespace",
+      "Access Request",
+      "Subscription Owner",
+      "Contributor",
+      "Viewer"
+    ]
+  },
+  {
+    "scenario": "User needs access to multiple environments",
+    "user_queries": [
+      "Can I get access to different environments like PPD and Prod?"
+    ],
+    "solution": "Yes. Access is assigned separately for each environment. The subscription owner must add you to the corresponding role for every required environment, such as application-contributor-npd for NPD, application-contributor-ppd for PPD, or application-contributor-prd for production. The corresponding viewer roles can be used when read-only access is required. Access is available after the Service Request is completed.",
+    "tags": [
+      "CPP",
+      "Environment Access",
+      "NPD",
+      "PPD",
+      "Prod",
+      "Roles",
+      "Subscription Owner",
+      "Service Request"
+    ]
+  },
+  {
+    "scenario": "New user requests access to a PPD application in Harness",
+    "user_queries": [
+      "I need access to the PPD application in Harness. How do I get it?"
+    ],
+    "solution": "Only the subscription owner of the application can grant access. Ask the owner to assign the appropriate role: application-contributor-npd/ppd/prd for developer access, or application-viewer-npd/ppd/prd for viewer access. Once the role is assigned in CPP, the user is automatically added to the corresponding role in Harness for that specific project.",
+    "tags": [
+      "CPP",
+      "Harness",
+      "PPD",
+      "New User",
+      "Access Request",
+      "Subscription Owner",
+      "Contributor",
+      "Viewer"
+    ]
+  },
+  {
+    "scenario": "User with an existing role wants access to another project",
+    "user_queries": [
+      "I am already a viewer for the PPD project. Can I get access to the NPD project?"
+    ],
+    "solution": "Access is specific to the project/application. Ask the subscription owner to add you to the relevant role for the NPD application in CPP. Once assigned as a viewer or contributor for NPD, you will be added to the corresponding project in Harness. Existing access to PPD does not automatically grant access to NPD.",
+    "tags": [
+      "CPP",
+      "Harness",
+      "Project Access",
+      "NPD",
+      "PPD",
+      "Role Assignment",
+      "Access Scope"
+    ]
+  },
+  {
+    "scenario": "First-time user onboarding to Harness",
+    "user_queries": [
+      "I was granted access to Harness for the first time. What happens next?"
+    ],
+    "solution": "An email is sent automatically to the registered email address with instructions to set up Multi-Factor Authentication (MFA). The email contains a QR code that must be scanned using a supported authenticator app, such as Google Authenticator or Microsoft Authenticator. Complete MFA setup before accessing Harness.",
+    "tags": [
+      "Harness",
+      "Onboarding",
+      "MFA",
+      "Authenticator",
+      "First-Time Access"
+    ]
+  },
+  {
+    "scenario": "User is assigned a role but cannot access Harness",
+    "user_queries": [
+      "I was assigned the role in the CPP Portal, but I can't access Harness yet."
+    ],
+    "solution": "If the role has been assigned but the MFA setup email has not arrived, check the inbox and spam folder. Complete MFA registration by scanning the QR code and activating MFA. Access is granted only after MFA setup is complete.",
+    "tags": [
+      "CPP",
+      "Harness",
+      "Access Issue",
+      "MFA",
+      "Role Assignment",
+      "Email"
+    ]
+  },
+  {
+    "scenario": "Clarification on role and access scope",
+    "user_queries": [
+      "Does assigning me a role in CPP Portal give me access to all projects?"
+    ],
+    "solution": "No. A role grants access only to the specific application/project to which the user is assigned. Harness projects are global resources, but access is project-specific. Separate role assignments are required for each project.",
+    "tags": [
+      "CPP",
+      "Harness",
+      "Role Assignment",
+      "Project Access",
+      "Access Scope"
+    ]
+  },
+  {
+    "scenario": "User cannot see application subscriptions in CPP",
+    "user_queries": [
+      "I cannot see the subscriptions for my application in the Cloud Platform Portal. What should I do?"
+    ],
+    "solution": "Check whether you are assigned to the correct CPP role for the application and environment, such as application-contributor-npd/ppd/prd or application-viewer-npd/ppd/prd. If you are not in the required role, contact the Application Owner and request to be added. After the owner adds you, log out of CPP and log back in to check whether the subscriptions appear.",
+    "tags": [
+      "CPP",
+      "Subscriptions",
+      "Application Access",
+      "Roles",
+      "Application Owner",
+      "Login"
+    ]
+  },
+  {
+    "scenario": "User is in the correct role but still cannot view subscriptions",
+    "user_queries": [
+      "I'm already part of the right role, but I still can't see my application subscriptions in CPP."
+    ],
+    "solution": "There may be a temporary delay while the role update propagates. Ask the Application Owner to confirm that you were added to the correct role. If confirmed, log out and back in to CPP or clear the browser cache. If the issue persists, contact the Application Owner again for verification.",
+    "tags": [
+      "CPP",
+      "Subscriptions",
+      "Role Propagation",
+      "Browser Cache",
+      "Application Owner",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "scenario": "User is unsure which role to request to manage subscriptions",
+    "user_queries": [
+      "I need access to manage my application's subscriptions, but I'm not sure which role I should be assigned to."
+    ],
+    "solution": "Choose a role based on the required permissions. For viewing subscriptions only, request an application-viewer role such as application-viewer-npd. To manage or modify subscriptions, request a contributor role such as application-contributor-npd. Discuss the required access with the Application Owner, who can assign the correct role.",
+    "tags": [
+      "CPP",
+      "Subscriptions",
+      "Viewer",
+      "Contributor",
+      "Role Selection",
+      "Application Owner"
+    ]
+  },
+  {
+    "scenario": "User wants to understand which role to request for resource access",
+    "user_queries": [
+      "I need access to view resources in my application, but I'm not sure which role I should ask for."
+    ],
+    "solution": "For read-only access to resources, request the application-viewer-<environment> role, such as application-viewer-npd. To manage or modify resources, request the application-contributor-<environment> role, such as application-contributor-npd. Confirm the required access with the Application Owner.",
+    "tags": [
+      "CPP",
+      "Azure Resources",
+      "Viewer",
+      "Contributor",
+      "Role Selection",
+      "Environment"
+    ]
+  },
+  {
+    "scenario": "User is not authorized to add users but needs access",
+    "user_queries": [
+      "I don't have permission to add users myself. How do I get added to the role?"
+    ],
+    "solution": "Only members of the subscription-owner role for the application can add users. Contact the subscription owner or responsible Application Owner and ask them to add you to the appropriate role through CPP. Once added, a Service Request is created and must be completed to activate access.",
+    "tags": [
+      "CPP",
+      "Access Request",
+      "Subscription Owner",
+      "Role Assignment",
+      "Service Request",
+      "Permissions"
+    ]
+  },
+  {
+    "scenario": "User wants to add a collaborator to a GitHub repository",
+    "user_queries": [
+      "I need to add a team member to the GitHub repository for my application. How can I do this?"
+    ],
+    "solution": "You must be a member of the subscription-owner or subscription-contributor role for the application. In the GitHub repository, navigate to Settings > Collaborators & Teams and add the appropriate application-specific team. Teams are created through CPP and include administrator:<portfolio>-github-shared:AXA XL, <application>-contributor:<portfolio>-github-shared:AXA XL, and <application>-viewer:<portfolio>-github-shared:AXA XL. Add the team rather than individual users and assign the required permission level.",
+    "tags": [
+      "GitHub",
+      "Repository",
+      "Collaborators",
+      "Teams",
+      "CPP",
+      "Subscription Owner",
+      "Subscription Contributor",
+      "Permissions"
+    ]
+  },
+  {
+    "scenario": "User is not a subscription contributor or owner and cannot add a GitHub collaborator",
+    "user_queries": [
+      "I want to add a collaborator to the GitHub repo, but I don't see the option to do so."
+    ],
+    "solution": "Only users who are members of the subscription-owner or subscription-contributor role for the application can add collaborators. If you are not in either role, contact a subscription owner or another appropriately authorized person and ask them to add the team.",
+    "tags": [
+      "GitHub",
+      "Repository",
+      "Collaborators",
+      "Permissions",
+      "Subscription Owner",
+      "Subscription Contributor"
+    ]
+  },
+  {
+    "scenario": "User needs to grant access to a specific application team in GitHub",
+    "user_queries": [
+      "How do I assign access to my application team in GitHub?"
+    ],
+    "solution": "First confirm that you are authorized through the appropriate CPP role. Then open the application repository and use GitHub Settings > Collaborators & Teams to add the relevant application team, such as <application>-contributor:<portfolio>-github-shared:AXA XL. This grants the team read/write access to the repository.",
+    "tags": [
+      "GitHub",
+      "Repository",
+      "Teams",
+      "Collaborators",
+      "CPP",
+      "Read Write Access"
+    ]
+  },
+  {
+    "scenario": "User wants to know which teams to add to a GitHub repository",
+    "user_queries": [
+      "Which teams should I add to the GitHub repository?"
+    ],
+    "solution": "Add the three default application-specific teams created through CPP: administrator:<portfolio>-github-shared:AXA XL for admin access; <application>-contributor:<portfolio>-github-shared:AXA XL for read/write access; and <application>-viewer:<portfolio>-github-shared:AXA XL for read-only access. Find the application name in CPP for the specific application.",
+    "tags": [
+      "GitHub",
+      "Repository",
+      "Teams",
+      "Administrator",
+      "Contributor",
+      "Viewer",
+      "CPP",
+      "Access Levels"
+    ]
+  },
+  {
+    "scenario": "User has CPP roles but cannot add GitHub collaborators",
+    "user_queries": [
+      "I have the correct roles but still cannot add collaborators in GitHub."
+    ],
+    "solution": "CPP roles allow you to add teams, but the actual addition must be performed in the GitHub repository under Settings > Collaborators & Teams. Ensure that you also have the required permissions in GitHub. If you still cannot add collaborators, contact your GitHub administrator or support team to verify your GitHub access rights.",
+    "tags": [
+      "GitHub",
+      "Collaborators",
+      "CPP",
+      "Permissions",
+      "Troubleshooting",
+      "Repository Settings"
+    ]
+  },
+  {
+    "scenario": "Subscription owner needs to change the application contact",
+    "user_queries": [
+      "I am a subscription owner and need to update the contact for my application. How do I do it?"
+    ],
+    "solution": "As a subscription owner, open the application you want to update. Next to the current contact information, click the pencil icon to enable editing. Update the contact details and click the nearby save icon.",
+    "tags": [
+      "CPP",
+      "Application Contact",
+      "Subscription Owner",
+      "Update",
+      "Application Details"
+    ]
+  },
+  {
+    "scenario": "Viewing approval notifications as a non-approver",
+    "user_queries": [
+      "I received a notification that a request is waiting for FinOps approval, but I am not part of the FinOps group. What should I do?"
+    ],
+    "solution": "Viewing the notification does not grant permission to approve or take action. The approval is intended for users in the FinOps group. No action is required from you; the designated FinOps approver will handle it.",
+    "tags": [
+      "Approval",
+      "FinOps",
+      "Notifications",
+      "Non-Approver",
+      "Permissions"
+    ]
+  },
+  {
+    "scenario": "Seeing the Assign to Me option without being an approver",
+    "user_queries": [
+      "I see the Assign to Me button on an approval request, but I am not part of the required approval group. Can I assign the request to myself?"
+    ],
+    "solution": "No. Although the Assign to Me option may be visible, you cannot assign the approval to yourself without the required FinOps role or permission. Only designated approvers can take this action, and the system will prevent unauthorized assignment.",
+    "tags": [
+      "Approval",
+      "FinOps",
+      "Assign to Me",
+      "Non-Approver",
+      "Permissions"
+    ]
+  },
+  {
+    "scenario": "Attempting to approve a request without permission",
+    "user_queries": [
+      "I tried to approve a request for which I am not part of the approval group. The system lets me click Approve, but nothing happens. Why?"
+    ],
+    "solution": "This is expected behavior. Only users with the appropriate approval role or group membership can approve or reject requests. Without the required permissions, the system will not allow the action, ensuring proper control and compliance.",
+    "tags": [
+      "Approval",
+      "Permissions",
+      "Approval Group",
+      "Approve",
+      "Reject",
+      "Compliance"
+    ]
+  },
+  {
+    "scenario": "What a non-approver should do after receiving an approval notification",
+    "user_queries": [
+      "I received an approval notification but am not part of the approval role. What is my responsibility?"
+    ],
+    "solution": "Wait for the designated approver or approvers to handle the request. No action is required from you; the approval process is managed by the appropriate role holders.",
+    "tags": [
+      "Approval",
+      "Notifications",
+      "Non-Approver",
+      "Approver",
+      "Responsibilities"
+    ]
+  },
+  {
+    "scenario": "Post-release visibility of approval notifications",
+    "user_queries": [
+      "After a recent release, I see approval notifications for requests I am not authorized to approve. Is this normal? What should I do?"
+    ],
+    "solution": "Yes. Notifications may be visible for transparency, but they do not grant approval permissions. Leave approval actions to authorized approvers. No further action is required from you.",
+    "tags": [
+      "Approval",
+      "Notifications",
+      "Release",
+      "Non-Approver",
+      "Permissions",
+      "Transparency"
+    ]
+  },
+  {
+    "scenario": "Azure deployment references a subscription ID that no longer exists",
+    "user_queries": [
+      "I get an error saying that a subscription ID was not found in Azure, and I confirmed that the subscription no longer exists. What should I change in the configuration files?"
+    ],
+    "solution": "Remove the reference to the invalid subscription ID from the configuration files. In versions.tf, delete the subscription_id line. In xlcicabilityappskelton.yaml, remove or update the subscription_id under the pipeline configuration. This prevents the code from referencing a non-existent subscription and allows deployment with a valid, active subscription.",
+    "tags": [
+      "Azure",
+      "Subscription ID",
+      "Deployment",
+      "Configuration",
+      "Terraform",
+      "Pipeline",
+      "versions.tf",
+      "xlcicabilityappskelton.yaml"
+    ]
+  },
+  {
+    "scenario": "Getting access to Azure resources for a specific application",
+    "user_queries": [
+      "How can I get access to the Azure resources for a specific application?"
+    ],
+    "solution": "Raise a ticket with the IAM team through the designated Employee Service Center link for Microsoft Entra ID Security Group Membership. Specify the AD group corresponding to the required environment and access level: viewer for read-only access or contributor for full access. For the documented Cloud Platform Portal example, the groups are z-xlc-dlg-0001-clou-application-contributor-npd for contributor access and z-xlc-dlg-0001-clou-application-viewer-npd for read-only access.",
+    "tags": [
+      "Azure",
+      "IAM",
+      "Microsoft Entra ID",
+      "AD Group",
+      "Security Group Membership",
+      "Contributor",
+      "Viewer",
+      "Access Request"
+    ]
+  },
+  {
+    "scenario": "Finding the AD groups attached to environment resources",
+    "user_queries": [
+      "How do I find out the actual AD groups attached to the environment resources?"
+    ],
+    "solution": "Sign in to the Azure portal and navigate to the specific Azure service for the application. Open Access Control (IAM), go to Role Assignments, and set the scope to the resource. The AD groups assigned to that resource will be listed there.",
+    "tags": [
+      "Azure",
+      "AD Group",
+      "IAM",
+      "Role Assignments",
+      "Access Control",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "scenario": "User needs read-only access to an application",
+    "user_queries": [
+      "If I need read access to the application, which AD group should I be added to?"
+    ],
+    "solution": "Ask to be added to the viewer group, such as z-xlc-dlg-0001-clou-application-viewer-npd. This group grants read-only access to the application's NPD environment resources.",
+    "tags": [
+      "Azure",
+      "Read Only",
+      "Viewer",
+      "AD Group",
+      "NPD",
+      "Access Request"
+    ]
+  },
+  {
+    "scenario": "User needs full contributor access to an application",
+    "user_queries": [
+      "What if I need full contributor access instead of just read-only?"
+    ],
+    "solution": "Ask to be added to the contributor group, such as z-xlc-dlg-0001-clou-application-contributor-npd. This allows you to make changes to the application's resources in the NPD environment.",
+    "tags": [
+      "Azure",
+      "Contributor",
+      "AD Group",
+      "NPD",
+      "Write Access",
+      "Access Request"
+    ]
+  },
+  {
+    "scenario": "Access process for PPD and Prod environments",
+    "user_queries": [
+      "Is the Azure access process the same for other environments like PPD and Prod?"
+    ],
+    "solution": "Yes. The process is consistent across environments. Add yourself through the IAM access request process to the relevant application-contributor or application-viewer group for PPD or Prod, depending on the required access level. Examples include application-contributor-ppd and application-viewer-prd.",
+    "tags": [
+      "Azure",
+      "PPD",
+      "Prod",
+      "Environment Access",
+      "AD Group",
+      "Contributor",
+      "Viewer",
+      "IAM"
+    ]
+  },
+  {
+    "scenario": "User requests a change to the application name",
+    "user_queries": [
+      "Can I change the application name in the system after it has been created?"
+    ],
+    "solution": "The current system design does not support changing application names after creation.",
+    "tags": [
+      "CPP",
+      "Application Name",
+      "Application Configuration",
+      "Limitation"
+    ]
+  },
+  {
+    "scenario": "User needs admin access to a repository",
+    "user_queries": [
+      "Who will provide me with admin access to the repository?"
+    ],
+    "solution": "The repository owner or an existing repository administrator is responsible for granting admin access. Request admin rights from the current owner or an existing admin, who has the authority to assign admin permissions.",
+    "tags": [
+      "GitHub",
+      "Repository",
+      "Admin Access",
+      "Repository Owner",
+      "Administrator",
+      "Permissions"
+    ]
+  }
+]
