@@ -1,0 +1,50 @@
+services:
+  app:
+    build: .
+    depends_on:
+      pgvector:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    environment:
+      DB_URL: jdbc:postgresql://pgvector:5432/${DB_NAME:-cpp_chatbot}
+      DB_USERNAME: ${DB_USERNAME:-cpp_chatbot}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in the environment}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in the environment}
+      OLLAMA_BASE_URL: http://ollama:11434
+      KNOWLEDGE_FILE_PATH: /app/knowledge/knowledge-base.json
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./knowledge:/app/knowledge:ro
+    restart: unless-stopped
+
+  pgvector:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ${DB_NAME:-cpp_chatbot}
+      POSTGRES_USER: ${DB_USERNAME:-cpp_chatbot}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in the environment}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-cpp_chatbot} -d ${DB_NAME:-cpp_chatbot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  ollama_data:
